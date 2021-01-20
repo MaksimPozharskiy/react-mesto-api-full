@@ -20,7 +20,8 @@
   "homepage": "https://github.com/MaksimPozharskiy/express-mesto#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.11.8"
+    "mongoose": "^5.11.8",
+    "validator": "^13.5.2"
   },
   "devDependencies": {
     "eslint": "^7.14.0",
