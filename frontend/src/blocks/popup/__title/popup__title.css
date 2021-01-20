@@ -1,0 +1,26 @@
+.popup__title {
+  margin: 34px 0 0;
+  max-width: 340px;
+
+  font-family: 'Inter', 'Arial', 'Helvetica', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.21;
+  color: #000;
+  word-wrap: break-word;
+}
+
+@media screen and (max-width: 530px) {
+  .popup__title {
+    font-size: 20px;
+  }
+}
+
+
+@media screen and (max-width: 430px) {
+  .popup__title {
+    font-size: 18px;
+  }
+}
+
+

@@ -1,0 +1,18 @@
+.grid-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 282px);
+  row-gap: 20px;
+  column-gap: 18px;
+  justify-content: center;
+
+  max-width: 900px;
+
+  margin: 0 auto;
+  padding: 50px 0 0;
+}
+
+@media screen and (max-width: 576px) {
+  .grid-photos {
+    padding-top: 36px;
+  }
+}

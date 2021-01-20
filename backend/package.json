@@ -1,0 +1,31 @@
+{
+  "name": "express-mesto",
+  "version": "1.0.0",
+  "description": "`/public` — статика, полученная в результате билда фронтенд-приложения на Реакте  \r `/data` — JSON-файлы для временной эмуляции работы с базой данных  \r `/routes` — папка с файлами роутера",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "eslint --ignore-path .gitignore"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaksimPozharskiy/express-mesto.git"
+  },
+  "author": "Maksim Pozharskiy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaksimPozharskiy/express-mesto/issues"
+  },
+  "homepage": "https://github.com/MaksimPozharskiy/express-mesto#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.8"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  }
+}

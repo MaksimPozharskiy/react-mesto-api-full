@@ -1,0 +1,22 @@
+.start-screen__input {
+  width: 358px;
+  padding-bottom: 5px;
+
+  background-color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+
+  border: none;
+  border-bottom: 2px solid #ccc; 
+  outline: none;
+}
+
+.start-screen__input::placeholder {
+  color: #ccc;
+  font-weight: 500;
+}
+
+.start-screen__input:not(:first-child) {
+  margin-top: 30px;
+}
