@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
@@ -20,20 +21,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 
-// Временное решение для авторизаци
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5fea1309760f053b4c12804c',
-  };
-
-  next();
-});
-
 app.post('/signin', login);
 app.post('/signup', createUser);
-// авторизация
 app.use(auth);
-app.use('/', usersRouter);
+app.use('/users', usersRouter);
 app.use('/', cardsRouter);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 

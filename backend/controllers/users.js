@@ -1,6 +1,26 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const isAuthorized = require('../heplers/isAuthorized');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
+
+const getMe = (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (!isAuthorized(token)) {
+    return res.status(403).send({ message: 'Forbidden' });
+  }
+
+  return User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Нет пользователя с таким id' });
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
 
 const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
@@ -26,7 +46,7 @@ const createUser = (req, res) => {
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, hash,
+      name, about, avatar, email, password: hash,
     }))
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
@@ -42,7 +62,7 @@ const login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'bla-bla-bla', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 
       return res.send({ token });
     })
@@ -52,5 +72,5 @@ const login = (req, res) => {
 };
 
 module.exports = {
-  getUsers, getProfile, createUser, login,
+  getUsers, getProfile, createUser, login, getMe,
 };
