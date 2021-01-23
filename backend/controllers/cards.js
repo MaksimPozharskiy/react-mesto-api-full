@@ -1,10 +1,12 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request');
 
-const getCards = (req, res) => Card.find({})
+const getCards = (req, res, next) => Card.find({})
   .then((cards) => res.status(200).send(cards))
-  .catch((err) => res.status(500).send(err));
+  .catch(next);
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -12,26 +14,27 @@ const createCard = (req, res) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Данные не прошли валидацию' });
+        throw new BadRequestError('Данные не прошли валидацию');
       }
-      return res.status(500).send(err);
-    });
+    })
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   Card.findOneAndRemove({ owner: req.user._id, _id: req.params.cardId })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Нет карточки с таким id' });
+        throw new NotFoundError('Нет карточки с таким id');
       }
       return res.status(200).send('Карточка удалена');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Id карточки не валидный' });
+        throw new BadRequestError('Данные не прошли валидацию');
       }
-      return res.status(500).send(err);
-    });
+      throw err; // @TODO Подумать как можно реализовать поочевиднее
+    })
+    .catch(next);
 };
 
 module.exports = { getCards, createCard, deleteCard };
