@@ -4,7 +4,7 @@ const { errors, celebrate, Joi } = require('celebrate');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
@@ -21,7 +21,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 // Мидлвары
 app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
-
+app.use(requestLogger); // логи запросов
+app.use(errorLogger);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -41,6 +42,7 @@ app.use(auth);
 app.use('/users', usersRouter);
 app.use('/', cardsRouter);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
