@@ -24,12 +24,6 @@ app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 app.use(requestLogger); // логи запросов
 app.use(errorLogger);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(8).max(30),
@@ -39,6 +33,12 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
 app.use(auth);
 app.use('/users', usersRouter);
 app.use('/', cardsRouter);
