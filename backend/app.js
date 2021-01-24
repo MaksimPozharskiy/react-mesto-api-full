@@ -20,6 +20,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 // Мидлвары
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://mesto-mpozharskiy.students.nomoredomains.rocks');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+  next();
+});
 app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 app.use(requestLogger); // логи запросов
