@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -27,6 +28,7 @@ app.use(auth);
 app.use('/users', usersRouter);
 app.use('/', cardsRouter);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
