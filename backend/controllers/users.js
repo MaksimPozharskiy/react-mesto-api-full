@@ -78,7 +78,7 @@ const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   const owner = req.user._id;
 
-  User.findOneAndUpdate(owner, { name, about }, { new: true })
+  return User.findOneAndUpdate(owner, { name, about }, { new: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
