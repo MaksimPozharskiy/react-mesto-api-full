@@ -74,6 +74,20 @@ const updateAvatar = (req, res, next) => {
     }).catch(next);
 };
 
+const updateProfile = (req, res, next) => {
+  const { name, about } = req.body;
+  const owner = req.user._id;
+
+  User.findOneAndUpdate(owner, { name, about }, { new: true })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Нет пользователя с таким id');
+      }
+      res.send(user);
+    })
+    .catch(next);
+};
+
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -90,5 +104,5 @@ const login = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getProfile, createUser, login, getMe, updateAvatar,
+  getUsers, getProfile, createUser, login, getMe, updateAvatar, updateProfile,
 };
