@@ -65,7 +65,7 @@ const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const owner = req.user._id;
 
-  return User.findByIdAndUpdate(owner, { avatar })
+  return User.findByIdAndUpdate(owner, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
