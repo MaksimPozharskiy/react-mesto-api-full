@@ -29,15 +29,16 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.static(`${__dirname}/public`));
-app.use(express.json());
-app.use(requestLogger); // логи запросов
-app.use(errorLogger);
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+app.use(express.static(`${__dirname}/public`));
+app.use(express.json());
+app.use(requestLogger); // логи запросов
+app.use(errorLogger);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(8).max(30),
