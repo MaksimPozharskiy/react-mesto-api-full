@@ -1,3 +1,4 @@
+import api from './api';
 export const BASE_URL = 'https://api.mesto-mpozharskiy.students.nomoredomains.rocks';
 
 export const register = (email, password) => {
@@ -28,6 +29,7 @@ export const authorize = (email, password) => {
     console.log(data)
     if (data.token) {
       localStorage.setItem('jwt', data.token);
+      api.updateHeaders();
       return data.token;
     }
   })
@@ -37,7 +39,7 @@ export const getContent = (token) => {return fetch(`${BASE_URL}/users/me`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
+    'Authorization': `${token}`,
   },
 })
   .then((res) => {

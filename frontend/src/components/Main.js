@@ -12,7 +12,7 @@ function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCa
       <section className="profile">
           <div className="profile__container">
             <div className="profile__avatar-wrapp">
-              <img src={`${currentUser.avatar}`} alt="Аватар профиля" className="profile__avatar" />
+              <img src={currentUser.avatar} alt="Аватар профиля" className="profile__avatar" />
               <img src={editAvatar} alt="Смена аватара" className="profile__avatar-edit" onClick={onEditAvatar}/>
             </div>
             <div className="profile__info">

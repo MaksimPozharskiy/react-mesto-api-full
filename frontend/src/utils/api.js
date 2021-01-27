@@ -84,7 +84,7 @@ class Api {
 
   _checkRequestResult(response) {
     if (response.ok) {
-      return response.json(); 
+      return response.json();
     }
     return Promise.reject(`Возникла ошибка: ${response.status}`); 
   }
@@ -92,12 +92,21 @@ class Api {
   errorHandler(error) {
     console.log(error);
   }
+
+  updateHeaders() {
+    this._headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('jwt')}`,
+    }
+  }
+
 }
 
 const api = new Api({
   baseUrl: 'https://api.mesto-mpozharskiy.students.nomoredomains.rocks',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': `${localStorage.getItem('jwt')}`,
   }
 }); 
 

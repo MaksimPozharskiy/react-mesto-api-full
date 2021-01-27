@@ -23,7 +23,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = React.useState({_id: null, avatar: ''});
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [message, setMessage] = React.useState({ iconPath: '', text: '' });
   const [email, setEmail] = React.useState('');
@@ -31,7 +31,7 @@ function App() {
 
 
   React.useEffect(() => {
-    api.getUserInfo().then(data => setCurrentUser(data))
+    api.getUserInfo().then((user) => setCurrentUser(user.data))
     .catch(error => api.errorHandler(error));
   }, []);
 
@@ -92,6 +92,7 @@ function App() {
     api.editUserAvatar(avatar).then((updatedUser) => {
       setCurrentUser(updatedUser);
       setIsEditAvatarPopupOpen(false);
+      console.log(updatedUser);
     })
     .catch(error => api.errorHandler(error));
   }
@@ -108,7 +109,7 @@ function App() {
 
   function handleCardLike(card) {
     // Проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
     const changeLike = isLiked ? api.unlikeCard(card._id) : api.likeCard(card._id)
     changeLike.then((newCard) => {
@@ -130,7 +131,7 @@ function App() {
 
   function handleAddPlaceSubmit({name, link}) {
     api.addCard(name, link).then((card) => {
-      setCards([card, ...cards]);
+      setCards([card.data, ...cards]);
       setIsAddPlacePopupOpen(false);
     })
     .catch(error => api.errorHandler(error));
@@ -150,8 +151,8 @@ function App() {
   }, []);
   // Регистрация
   function registration(email, password) {
-    Auth.register(escapeHtml(email), password).then((res) => {
-      if(res.status === 201){
+    Auth.register(email, escapeHtml(password)).then((res) => {
+      if(res.status === 201 || res.status === 200){
         handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешно зарегистрировались!'})
         handleInfoTooltipPopupOpen();
         // Перенаправляем на страницу логина спустя 3сек и закрываем попап
@@ -170,7 +171,7 @@ function App() {
   }
   // Авторизация 
   function authorization(email, password) {
-    Auth.authorize(escapeHtml(email), password )
+    Auth.authorize(email, escapeHtml(password) )
     .then((data) => {
       if (!data) {
         throw new Error('Произошла ошибка');
@@ -180,6 +181,11 @@ function App() {
           setEmail(res.data.email);
         }).catch(err => console.log(err));
         setLoggedIn(true);
+
+        api.getUserInfo().then((user) => setCurrentUser(user.data))
+        .catch(error => api.errorHandler(error));
+        
+        
         handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешно авторизовались!'})
         handleInfoTooltipPopupOpen();
         // Перенаправляем на главную страницу спустя 3сек и закрываем попап
@@ -194,8 +200,10 @@ function App() {
 
   // Выход из учетки
   function handleSignOut() {
+    setCurrentUser({_id: null, avatar: ''})
     setLoggedIn(false);
     localStorage.removeItem('jwt');
+    api.updateHeaders();
     setEmail('');
     history.push('/sign-in');
   }
@@ -205,7 +213,7 @@ function App() {
       <div className="page">
         <Header loggedIn={loggedIn} email={email} handleSignOut={handleSignOut} />
         <Switch>
-          {currentUser && <ProtectedRoute exact path="/" loggedIn={loggedIn} component={Main} // Рендерим элемент только после того как пришел ответ от React.useEffect
+          {currentUser._id && <ProtectedRoute exact path="/" loggedIn={loggedIn} component={Main} // Рендерим элемент только после того как пришел ответ от React.useEffect
             onEditProfile={handleEditProfileClick} 
             onAddPlace={handleAddPlaceClick} 
             onEditAvatar={handleEditAvatarClick}
