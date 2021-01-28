@@ -8,7 +8,7 @@ router.get('/', getUsers);
 router.get('/me', getMe);
 router.get('/:id', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24),
+    userId: Joi.string().length(24).hex(),
   }),
 }), getProfile);
 router.patch('/me/avatar', celebrate({
