@@ -60,7 +60,7 @@ app.use('/', cardsRouter);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 app.use(errorLogger);
 app.use(errors());
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
 
   res.status(statusCode).send({
