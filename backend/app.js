@@ -34,7 +34,6 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-app.use(express.static(`${__dirname}/public`));
 app.use(express.json());
 app.use(requestLogger); // логи запросов
 app.use(errorLogger);
