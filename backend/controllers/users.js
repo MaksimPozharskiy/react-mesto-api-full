@@ -6,6 +6,7 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request');
 const UnauthorizedError = require('../errors/unauthorized');
 const ForbiddenError = require('../errors/forbidden');
+const ConflictError = require('../errors/conflict-err');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -56,6 +57,9 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new BadRequestError('Данные не прошли валидацию');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Такой емейл уже зарегистрирован');
       }
     })
     .catch(next);
