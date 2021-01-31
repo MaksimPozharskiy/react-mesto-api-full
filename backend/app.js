@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
@@ -21,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 // Мидлвары
+app.use(bodyParser.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
