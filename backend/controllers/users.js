@@ -59,7 +59,7 @@ const createUser = (req, res, next) => {
         throw new BadRequestError('Данные не прошли валидацию');
       }
       if (err.name === 'MongoError' || err.code === '11000') {
-        throw new ConflictError({ message: 'Такой емейл уже зарегистрирован' });
+        throw new ConflictError('Такой емейл уже зарегистрирован');
       }
     })
     .catch(next);
