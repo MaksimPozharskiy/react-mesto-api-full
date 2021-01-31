@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
@@ -21,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 // Мидлвары
+app.use(bodyParser.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
@@ -66,7 +68,7 @@ app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
 
   res.status(statusCode).send({
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : JSON.stringify(message),
+    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
   });
 });
 
